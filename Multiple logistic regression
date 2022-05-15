@@ -1,0 +1,26 @@
+#Download the csv file at https://www.statlearning.com/resources-first-edition
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.formula.api as smf
+import math
+
+%matplotlib inline
+
+df = pd.read_csv('Default.csv')
+
+df.head()
+
+df['default1'] = df.default.map({'No':0,'Yes':1})
+df['student1'] = df.student.map({'No':0,'Yes':1})
+df['income1'] = df.income/1000
+
+df.head()
+
+plt.figure(figsize=(12,6))
+sns.pairplot(df, hue='default')
+
+log_regm1 =smf.logit("default1 ~ income1 + balance + student1", data = df).fit()
+log_regm1.summary()
