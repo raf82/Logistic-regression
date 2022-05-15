@@ -1,0 +1,44 @@
+#Download the csv file at https://www.statlearning.com/resources-first-edition
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.formula.api as smf
+import math
+
+%matplotlib inline
+
+df = pd.read_csv('Default.csv')
+
+df.head()
+
+df['default1'] = df.default.map({'No':0,'Yes':1})
+df['student1'] = df.student.map({'No':0,'Yes':1})
+
+df.head()
+
+plt.figure(figsize=(12,6))
+sns.pairplot(df, hue='default')
+
+log_reg =smf.logit("default1 ~ balance", data = df).fit()
+log_reg.summary()
+
+print(log_reg.params)
+
+#Predict value
+def pred1(x):
+    return math.exp(log_reg.params[0]+log_reg.params[1]*x)/(1+math.exp(log_reg.params[0]+log_reg.params[1]*x))
+
+pred1(1000)
+
+log_reg2 =smf.logit("default1 ~ student1", data = df).fit()
+log_reg2.summary()
+
+print(log_reg2.params)
+
+#Predict value
+def pred2(x):
+    return math.exp(log_reg2.params[0]+log_reg2.params[1]*x)/(1+math.exp(log_reg2.params[0]+log_reg2.params[1]*x))
+
+pred2(1)
